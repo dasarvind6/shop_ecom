@@ -911,19 +911,22 @@ export const AddAdminProduct = async (req, res) => {
       updatespecifications = specifications;
     }
 
+    // Find last product
     const lastProduct = await productModel.findOne().sort({ _id: -1 }).limit(1);
-    if (typeof lastProduct.p_id === 'string') {
-      lastProduct.p_id = parseFloat(lastProduct.p_id);
+
+    let lastProductId = 0;
+    if (lastProduct && lastProduct.p_id) {
+      lastProductId = typeof lastProduct.p_id === 'string'
+        ? parseFloat(lastProduct.p_id)
+        : lastProduct.p_id;
     }
 
-    const lastProductId = lastProduct ? lastProduct.p_id : 0;
-
-    // Calculate the auto-increment ID
+    // Calculate auto-increment ID
     const p_id = lastProductId + 1;
 
     // Create a new category with the specified parent
     const newProduct = new productModel({
-      p_id,
+      p_id: p_id ? p_id : 1,
       title,
       description,
       pImage,
@@ -1030,7 +1033,7 @@ export const updateProductAdmin = async (req, res) => {
       metaKeywords,
       Category,
       tag, features,
-      specifications, weight, gst, hsn, sku,  variant_products,type 
+      specifications, weight, gst, hsn, sku, variant_products, type
     } = req.body;
 
     console.log('typp', type);
@@ -1051,7 +1054,7 @@ export const updateProductAdmin = async (req, res) => {
       metaKeywords,
       Category,
       tag, features,
-      specifications, weight, gst, hsn, sku,variant_products,type 
+      specifications, weight, gst, hsn, sku, variant_products, type
     };
 
     const Product = await productModel.findByIdAndUpdate(id, updateFields, {
