@@ -144,19 +144,31 @@ router.post('/admin/import/allproducts/', importAllProAdmin);
 // --------------------    user routes start  -------------------//
 
 // Middleware function to check if the request is coming from an authorized domain
+// function checkOrigin(req, res, next) {
+//   const allowedOrigins = ['https://shopnew.servicekarwalo.com', 'https://shop.servicekarwalo.com', 'https://shopnew.servicekarwalo.com/', 'https://shop.servicekarwalo.com/']; // Add your authorized domains here
+//   const origin = req.headers.origin;
+//   if (allowedOrigins.includes(origin)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin);
+//     next();
+//   } else {
+//     // next();
+//     res.status(403).json({ error: 'Unauthorized domain' });
+//   }
+// }
+
+// Middleware function to check if the request is coming from an authorized domain
 function checkOrigin(req, res, next) {
-  const allowedOrigins = ['https://shopnew.servicekarwalo.com', 'https://shop.servicekarwalo.com', 'https://shopnew.servicekarwalo.com/', 'https://shop.servicekarwalo.com/']; // Add your authorized domains here
+  const allowedOrigins = [
+  'https://shopnew.servicekarwalo.com', 'https://shop.servicekarwalo.com'
+  ]; // Add your authorized domains here
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader("Access-Control-Allow-Origin", origin);
     next();
   } else {
-    // next();
-    res.status(403).json({ error: 'Unauthorized domain' });
+        res.status(403).json({ error: "Unauthorized domain" });
   }
 }
-
-
 
 router.post('/signup', checkOrigin, SignupUser);
 router.post('/login', checkOrigin, Userlogin);
